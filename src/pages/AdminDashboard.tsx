@@ -5,37 +5,11 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useRealtimeDashboard } from "@/hooks/useRealtimeDashboard";
 import StudentManagement from "@/components/StudentManagement";
 import { MeetingManagement } from "@/components/MeetingManagement";
-import { useEffect } from "react";
 
 const AdminDashboard = () => {
-  const { adminSession, isAuthenticated, isLoading: authLoading, signOut } = useAdminAuth();
+  const { adminSession, signOut } = useAdminAuth();
   const { stats, isLoading: statsLoading, refetch } = useRealtimeDashboard();
 
-  useEffect(() => {
-    // Redirect to home if not authenticated
-    if (!authLoading && !isAuthenticated) {
-      window.location.href = '/';
-    }
-  }, [isAuthenticated, authLoading]);
-
-  // Show loading while checking authentication
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="p-4 bg-gradient-primary rounded-full inline-block mb-4">
-            <Shield className="h-8 w-8 text-primary-foreground animate-pulse" />
-          </div>
-          <p className="text-muted-foreground">Checking authentication...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Don't render if not authenticated
-  if (!isAuthenticated) {
-    return null;
-  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted p-8">
       <div className="max-w-7xl mx-auto space-y-8">

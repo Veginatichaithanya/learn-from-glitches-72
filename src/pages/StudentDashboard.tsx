@@ -9,32 +9,8 @@ import { useStudentData } from '@/hooks/useStudentData';
 import { StudentMeetings } from '@/components/StudentMeetings';
 
 const StudentDashboard = () => {
-  const { studentSession, isAuthenticated, isLoading, signOut } = useStudentAuth();
+  const { studentSession, signOut } = useStudentAuth();
   const { courses, errorChallenges, totalCourses, totalChallenges, isLoading: dataLoading } = useStudentData();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      navigate('/student/login');
-    }
-  }, [isAuthenticated, isLoading, navigate]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="p-4 bg-gradient-primary rounded-full inline-block mb-4">
-            <GraduationCap className="h-8 w-8 text-primary-foreground animate-pulse" />
-          </div>
-          <p className="text-muted-foreground">Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted p-8">

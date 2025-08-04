@@ -13,6 +13,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import StudentLogin from "./pages/StudentLogin";
 import StudentDashboard from "./pages/StudentDashboard";
 import NotFound from "./pages/NotFound";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import ProtectedStudentRoute from "./components/ProtectedStudentRoute";
 
 const queryClient = new QueryClient();
 
@@ -31,15 +33,29 @@ const App = () => {
         <TooltipProvider>
           <Toaster ref={toasterRef} />
           <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/student/login" element={<StudentLogin />} />
-            <Route path="/student/dashboard" element={<StudentDashboard />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route 
+                path="/admin/dashboard" 
+                element={
+                  <ProtectedAdminRoute>
+                    <AdminDashboard />
+                  </ProtectedAdminRoute>
+                } 
+              />
+              <Route path="/student/login" element={<StudentLogin />} />
+              <Route 
+                path="/student/dashboard" 
+                element={
+                  <ProtectedStudentRoute>
+                    <StudentDashboard />
+                  </ProtectedStudentRoute>
+                } 
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>
