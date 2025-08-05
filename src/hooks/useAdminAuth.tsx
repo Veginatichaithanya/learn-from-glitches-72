@@ -7,7 +7,6 @@ interface AdminSession {
   id: string;
   email: string;
   full_name?: string;
-  session_token?: string;
   loginTime: string;
   rememberMe?: boolean;
 }
@@ -41,7 +40,7 @@ export const useAdminAuth = () => {
             toast({
               title: "Session Expired",
               description: "Please log in again to continue.",
-              variant: "warning"
+              variant: "destructive"
             });
           }
         }
@@ -70,7 +69,7 @@ export const useAdminAuth = () => {
 
   const signIn = async (email: string, password: string, rememberMe: boolean = false) => {
     try {
-      const { data, error } = await supabase.rpc('verify_admin_credentials', {
+      const { data, error } = await supabase.rpc('verify_admin_login', {
         email_input: email,
         password_input: password
       });
@@ -83,7 +82,6 @@ export const useAdminAuth = () => {
           id: response.admin?.id,
           email: response.admin?.email,
           full_name: response.admin?.full_name,
-          session_token: response.session_token,
           loginTime: new Date().toISOString(),
           rememberMe
         };
@@ -96,7 +94,6 @@ export const useAdminAuth = () => {
         toast({
           title: "Welcome Back!",
           description: `Successfully logged in as ${response.admin?.full_name || response.admin?.email}`,
-          variant: "success"
         });
 
         return { success: true };
@@ -104,7 +101,7 @@ export const useAdminAuth = () => {
         toast({
           title: "Login Failed",
           description: response?.error || "Invalid credentials",
-          variant: "error"
+          variant: "destructive"
         });
         return { success: false, error: response?.error };
       }
@@ -113,7 +110,7 @@ export const useAdminAuth = () => {
       toast({
         title: "Login Error",
         description: "An error occurred during login. Please try again.",
-        variant: "error"
+        variant: "destructive"
       });
       return { success: false, error: "Login failed" };
     }

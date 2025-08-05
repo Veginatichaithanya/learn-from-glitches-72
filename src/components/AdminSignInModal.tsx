@@ -79,7 +79,7 @@ const AdminSignInModal = ({ isOpen, onClose }: AdminSignInModalProps) => {
 
     try {
       // Call the secure admin login function
-      const { data, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+      const { data, error: rpcError } = await supabase.rpc('verify_admin_login', {
         email_input: email,
         password_input: password
       });
@@ -93,7 +93,6 @@ const AdminSignInModal = ({ isOpen, onClose }: AdminSignInModalProps) => {
         toast({
           title: "Login Successful",
           description: `Welcome back, ${response.admin?.full_name || response.admin?.email}!`,
-          variant: "success"
         });
 
         // Store admin session data securely
@@ -101,7 +100,6 @@ const AdminSignInModal = ({ isOpen, onClose }: AdminSignInModalProps) => {
           id: response.admin?.id,
           email: response.admin?.email,
           full_name: response.admin?.full_name,
-          session_token: response.session_token,
           loginTime: new Date().toISOString()
         };
 

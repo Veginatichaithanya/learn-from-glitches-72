@@ -29,7 +29,7 @@ const AdminLogin = () => {
 
     try {
       // Call the secure admin login function
-      const { data, error: rpcError } = await supabase.rpc('verify_admin_credentials', {
+      const { data, error: rpcError } = await supabase.rpc('verify_admin_login', {
         email_input: email,
         password_input: password
       });
@@ -45,7 +45,6 @@ const AdminLogin = () => {
           id: response.admin?.id,
           email: response.admin?.email,
           full_name: response.admin?.full_name,
-          session_token: response.session_token,
           loginTime: new Date().toISOString(),
           rememberMe
         };
@@ -59,7 +58,6 @@ const AdminLogin = () => {
         toast({
           title: "Welcome Back!",
           description: `Successfully logged in as ${response.admin?.full_name || response.admin?.email}`,
-          variant: "success"
         });
 
         // Navigate to admin dashboard
@@ -69,7 +67,7 @@ const AdminLogin = () => {
         toast({
           title: "Login Failed",
           description: response?.error || "Invalid email or password",
-          variant: "error"
+          variant: "destructive"
         });
       }
     } catch (error) {
@@ -78,7 +76,7 @@ const AdminLogin = () => {
       toast({
         title: "Login Error",
         description: "An error occurred during login. Please try again.",
-        variant: "error"
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);
