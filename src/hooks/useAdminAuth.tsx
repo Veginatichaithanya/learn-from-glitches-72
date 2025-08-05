@@ -1,11 +1,15 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AdminSession {
   id: string;
   email: string;
   full_name?: string;
+  session_token?: string;
   loginTime: string;
+  rememberMe?: boolean;
 }
 
 export const useAdminAuth = () => {
@@ -14,73 +18,104 @@ export const useAdminAuth = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check for existing admin session
     const checkSession = () => {
       try {
-        const sessionData = localStorage.getItem('admin_session');
+        // Check both localStorage and sessionStorage
+        let sessionData = localStorage.getItem('admin_session') || sessionStorage.getItem('admin_session');
+        
         if (sessionData) {
           const session = JSON.parse(sessionData);
           
-          // Check if session is still valid (24 hours)
+          // Check if session is still valid (24 hours for remember me, 8 hours for regular)
           const loginTime = new Date(session.loginTime);
           const now = new Date();
           const hoursDiff = (now.getTime() - loginTime.getTime()) / (1000 * 60 * 60);
+          const maxHours = session.rememberMe ? 24 : 8;
           
-          if (hoursDiff < 24) {
+          if (hoursDiff < maxHours) {
             setAdminSession(session);
           } else {
             // Session expired, remove it
             localStorage.removeItem('admin_session');
+            sessionStorage.removeItem('admin_session');
+            toast({
+              title: "Session Expired",
+              description: "Please log in again to continue.",
+              variant: "warning"
+            });
           }
         }
       } catch (error) {
         console.error('Error checking admin session:', error);
         localStorage.removeItem('admin_session');
+        sessionStorage.removeItem('admin_session');
       } finally {
         setIsLoading(false);
       }
     };
 
     checkSession();
-  }, []);
+  }, [toast]);
 
   const signOut = () => {
     localStorage.removeItem('admin_session');
+    sessionStorage.removeItem('admin_session');
     setAdminSession(null);
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out from admin panel.",
     });
-    window.location.href = '/';
+    window.location.href = '/admin/login';
   };
 
-  const signIn = (email: string, password: string) => {
-    if (email === "admin@gmail.com" && password === "admin@123") {
-      const loginTime = new Date().toISOString();
-      const newSession: AdminSession = {
-        id: "admin-1",
-        email: email,
-        full_name: "Admin User",
-        loginTime
-      };
-      
-      localStorage.setItem('admin_session', JSON.stringify(newSession));
-      setAdminSession(newSession);
-      
-      toast({
-        title: "Welcome Back!",
-        description: "Successfully logged in to admin panel.",
-        variant: "success"
+  const signIn = async (email: string, password: string, rememberMe: boolean = false) => {
+    try {
+      const { data, error } = await supabase.rpc('verify_admin_credentials', {
+        email_input: email,
+        password_input: password
       });
-      
-      return true;
-    } else {
+
+      if (error) throw error;
+
+      const response = data as any;
+      if (response?.success) {
+        const sessionData: AdminSession = {
+          id: response.admin?.id,
+          email: response.admin?.email,
+          full_name: response.admin?.full_name,
+          session_token: response.session_token,
+          loginTime: new Date().toISOString(),
+          rememberMe
+        };
+
+        // Store in localStorage if remember me, otherwise sessionStorage
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem('admin_session', JSON.stringify(sessionData));
+        setAdminSession(sessionData);
+
+        toast({
+          title: "Welcome Back!",
+          description: `Successfully logged in as ${response.admin?.full_name || response.admin?.email}`,
+          variant: "success"
+        });
+
+        return { success: true };
+      } else {
+        toast({
+          title: "Login Failed",
+          description: response?.error || "Invalid credentials",
+          variant: "error"
+        });
+        return { success: false, error: response?.error };
+      }
+    } catch (error) {
+      console.error('Login error:', error);
       toast({
-        title: "Login Failed",
-        description: "Invalid email or password.",
+        title: "Login Error",
+        description: "An error occurred during login. Please try again.",
         variant: "error"
       });
-      return false;
+      return { success: false, error: "Login failed" };
     }
   };
 
