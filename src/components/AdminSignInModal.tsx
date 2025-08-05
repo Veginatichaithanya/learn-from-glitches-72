@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -130,41 +131,41 @@ const AdminSignInModal = ({ isOpen, onClose }: AdminSignInModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-black border-gray-800">
         <DialogHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <div className="p-3 bg-gradient-primary rounded-full">
-              <Shield className="h-6 w-6 text-primary-foreground" />
+            <div className="p-3 bg-gray-600 rounded-full">
+              <Shield className="h-6 w-6 text-white" />
             </div>
           </div>
-          <DialogTitle className="text-xl">Admin Sign In</DialogTitle>
+          <DialogTitle className="text-xl text-white">Admin Sign In</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
+            <Alert variant="destructive" className="bg-red-900/20 border-red-800">
+              <AlertDescription className="text-red-400">{error}</AlertDescription>
             </Alert>
           )}
           
           {/* Email Field */}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-gray-300">Email</Label>
             <Input
               id="email"
               type="email"
               value={email}
               onChange={handleEmailChange}
               placeholder="Enter your email"
-              className={emailError ? "border-destructive" : ""}
+              className={`h-12 bg-gray-800 border-0 text-white placeholder:text-gray-400 rounded-xl focus-visible:ring-1 focus-visible:ring-gray-600 ${emailError ? "ring-1 ring-red-500" : ""}`}
               disabled={isLoading}
             />
-            {emailError && <p className="text-sm text-destructive">{emailError}</p>}
+            {emailError && <p className="text-sm text-red-400">{emailError}</p>}
           </div>
           
           {/* Password Field */}
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-gray-300">Password</Label>
             <div className="relative">
               <Input
                 id="password"
@@ -172,20 +173,20 @@ const AdminSignInModal = ({ isOpen, onClose }: AdminSignInModalProps) => {
                 value={password}
                 onChange={handlePasswordChange}
                 placeholder="Enter your password"
-                className={passwordError ? "border-destructive pr-10" : "pr-10"}
+                className={`h-12 bg-gray-800 border-0 text-white placeholder:text-gray-400 rounded-xl pr-12 focus-visible:ring-1 focus-visible:ring-gray-600 ${passwordError ? "ring-1 ring-red-500" : ""}`}
                 disabled={isLoading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 disabled={isLoading}
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
+            {passwordError && <p className="text-sm text-red-400">{passwordError}</p>}
           </div>
           
           <div className="flex gap-3 pt-4">
@@ -193,14 +194,14 @@ const AdminSignInModal = ({ isOpen, onClose }: AdminSignInModalProps) => {
               type="button"
               variant="outline"
               onClick={handleClose}
-              className="flex-1"
+              className="flex-1 bg-gray-800 border-gray-700 text-gray-300 hover:bg-gray-700"
               disabled={isLoading}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1"
+              className="flex-1 bg-gray-700 hover:bg-gray-600 text-white"
               disabled={isLoading || !!emailError || !!passwordError}
             >
               {isLoading ? (
