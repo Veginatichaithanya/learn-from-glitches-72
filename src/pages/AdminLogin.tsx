@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, LogIn, Code2, Moon, Sun } from "lucide-react";
@@ -222,14 +221,6 @@ const AdminLogin = () => {
                 )}
               </Button>
             </form>
-
-            {/* Demo Credentials Info */}
-            <div className="mt-6 p-4 bg-muted/50 rounded-lg border">
-              <p className="text-xs text-center text-muted-foreground">
-                <span className="font-medium">Demo Credentials:</span><br />
-                Email: admin@gmail.com | Password: admin@123
-              </p>
-            </div>
           </CardContent>
         </Card>
 

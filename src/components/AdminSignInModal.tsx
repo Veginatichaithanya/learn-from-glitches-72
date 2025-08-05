@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -215,10 +214,6 @@ const AdminSignInModal = ({ isOpen, onClose }: AdminSignInModalProps) => {
             </Button>
           </div>
         </form>
-        
-        <div className="text-center text-sm text-muted-foreground mt-4 pt-4 border-t">
-          <p>Demo: admin@gmail.com / admin@123</p>
-        </div>
       </DialogContent>
     </Dialog>
   );
