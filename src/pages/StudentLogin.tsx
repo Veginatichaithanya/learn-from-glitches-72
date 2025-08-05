@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -36,72 +35,78 @@ const StudentLogin = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center">
         <div className="text-center">
-          <div className="p-4 bg-gray-600 rounded-full inline-block mb-4">
-            <GraduationCap className="h-8 w-8 text-white animate-pulse" />
+          <div className="p-4 bg-gradient-primary rounded-full inline-block mb-4">
+            <GraduationCap className="h-8 w-8 text-primary-foreground animate-pulse" />
           </div>
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-4">
         {/* Back button */}
         <Button 
           variant="ghost" 
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-gray-400 hover:text-white absolute top-4 left-4"
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Home
         </Button>
-
-        {/* Logo and Title */}
-        <div className="text-center space-y-6">
+        
+        <Card className="shadow-elegant border-0 bg-card/80 backdrop-blur-sm">
+        <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center">
-              <GraduationCap className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow">
+              <GraduationCap className="w-8 h-8 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-3xl font-semibold text-white">
-            HextaUI
-          </h1>
-        </div>
-        
-        <div className="space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="h-14 bg-gray-800 border-0 text-white placeholder:text-gray-400 rounded-xl px-4 text-base focus-visible:ring-1 focus-visible:ring-gray-600"
-                />
-              </div>
-              
+          <div>
+            <CardTitle className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              Student Login
+            </CardTitle>
+            <CardDescription className="text-muted-foreground">
+              Enter your credentials to access your learning dashboard
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="transition-all duration-300 focus:shadow-glow"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Password"
+                  placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="h-14 bg-gray-800 border-0 text-white placeholder:text-gray-400 rounded-xl px-4 pr-12 text-base focus-visible:ring-1 focus-visible:ring-gray-600"
+                  className="pr-10 transition-all duration-300 focus:shadow-glow"
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 text-gray-400 hover:text-white"
+                  className="absolute right-0 top-0 h-full px-3"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -115,19 +120,20 @@ const StudentLogin = () => {
 
             <Button 
               type="submit" 
-              className="w-full h-14 bg-gray-700 hover:bg-gray-600 text-white rounded-xl text-base font-medium transition-colors"
+              className="w-full shadow-glow transition-all duration-300 hover:shadow-lg"
               disabled={isLoading}
             >
-              {isLoading ? "Signing In..." : "Sign in"}
+              {isLoading ? "Signing In..." : "Sign In"}
             </Button>
           </form>
 
-          <div className="text-center">
-            <p className="text-sm text-gray-400">
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground">
               Don't have credentials? Contact your administrator.
             </p>
           </div>
-        </div>
+        </CardContent>
+        </Card>
       </div>
     </div>
   );
